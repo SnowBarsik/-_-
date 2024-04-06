@@ -1,5 +1,6 @@
 {-# OPTIONS_GHC -Wall #-}
 module GAME where
+
 import Data.Set (fromList, toList)
 removeDuplicates :: (Eq a, Ord a) => [a] -> [a]
 removeDuplicates = toList . fromList
@@ -23,7 +24,7 @@ change numb n res x = if ((elem (numb, res, x) perehids) && (n+1 > x)) then True
 
 changes :: [Int] -> Int -> Res
 changes [] _ = []
-changes [x] n = [[(y,z)|z<-[1,2,3],y<-[0..9],change x n y z]]
+--changes [x] n = [[(y,z)|z<-[1,2,3],y<-[0..9],change x n y z]]
 changes (xi:xs) n = [(y,z)|z<-[1,2,3],y<-[0..9],change xi n y z]:changes xs n
 
 changesS :: Char -> Int -> [(Char,Int)]
@@ -36,7 +37,7 @@ chList ((xi,xch):x,i) n = ((changes xi n, ((xch,0):changesS xch n)) : fst (chLis
 
 changesB :: [Int] -> Int -> Res
 changesB [] _ = []
-changesB (xi:xs) n = [(y,z)|z<-[1,2,3],y<-[0..9],change y n xi z]:changes xs n
+changesB (xi:xs) n = [(y,z)|z<-[1,2,3],y<-[0..9],change y n xi z]:changesB xs n
 
 changesSB :: Char -> Int -> [(Char,Int)]
 changesSB xch _ = [(y,1)|y<-['+','-','='],(y, xch, 1) == perehidS]
@@ -72,9 +73,7 @@ ful a = []:[[a1]|a1<-a]
 comb :: [[a]] -> [[a]]
 comb [] = []
 comb [a] = [[a1]|a1<-a]
-comb (a1:a2:a3:a4:_) = [[a11,a22,a33,a44]|a11<-a1,a22<-a2,a33<-a3,a44<-a4]
-comb (a1:a2:a3:_) = [[a11,a22,a33]|a11<-a1,a22<-a2,a33<-a3]
-comb (a1:a2:_) = [[a11,a22]|a11<-a1,a22<-a2]
+comb (a1:a2) = [[a11]++a22|a11<-a1,a22<-(comb a2)]
 
 clear_price :: ([(Res,[(Char,Int)])],Res) -> Int -> [([(Res,(Char,Int))],Res)]
 clear_price l p = [a|a<-toto l, p == sump a]
